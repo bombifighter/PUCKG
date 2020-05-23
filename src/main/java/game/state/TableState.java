@@ -88,6 +88,11 @@ public class TableState implements Cloneable {
 
     private void initTable(int[][] a) {
         this.table = new Cell[6][6];
+        for (int i = 0; i < 6; ++i) {
+            for (int j = 0; j < 6; ++j) {
+                this.table[i][j] = Cell.of(a[i][j]);
+            }
+        }
     }
 
     /**
@@ -112,11 +117,21 @@ public class TableState implements Cloneable {
         if(!isEmptyCell(rowTo,colTo)) {
             return false;
         }
+        if(isBlackCell(rowTo,colTo)) {
+            return false;
+        }
+        if(player == previousPlayer) {
+            return false;
+        }
         return true;
     }
 
     public boolean isEmptyCell (int row, int col) {
         return table[row][col] == Cell.EMPTY;
+    }
+
+    public boolean isBlackCell (int row, int col) {
+        return table[row][col] == Cell.BLACK;
     }
     /**
      * Moves a puck from a given position to another position by the specific player.
@@ -129,7 +144,7 @@ public class TableState implements Cloneable {
      * @throws IllegalArgumentException if the specified player is not the next player in the order
      */
     public void movePuck (int player, int rowFrom, int colFrom, int rowTo, int colTo) {
-        if(player == previousPlayer || !isMoveAvailable(player,rowFrom,colFrom,rowTo,colTo)) {
+        if(!isMoveAvailable(player,rowFrom,colFrom,rowTo,colTo)) {
             throw new IllegalArgumentException();
         }
         table[rowFrom][colFrom] = Cell.EMPTY;
@@ -171,6 +186,15 @@ public class TableState implements Cloneable {
      * in the eight adjacent cells, {@code false} otherwise
      */
     public boolean isNewPuckAvailable (int player, int row, int col) {
+        if(player == previousPlayer) {
+            return false;
+        }
+        if(isBlackCell(row,col)) {
+            return false;
+        }
+        if(!isEmptyCell(row,col)) {
+            return false;
+        }
         for(int i = row-1; i <= row+1; ++i) {
             if(i < 0 || i >= table.length) {
                 continue;
@@ -194,11 +218,12 @@ public class TableState implements Cloneable {
      * @param col the column of the puck to be placed
      */
     public void newPuck (int player, int row, int col) {
-        if(isEmptyCell(row,col) || isNewPuckAvailable(player, row, col)) {
-            table[row][col] = Cell.of(player);
-            afterStep(player, row, col);
-            previousPlayer = player;
+        if(!isNewPuckAvailable(player, row, col)) {
+            throw new IllegalArgumentException();
         }
+        table[row][col] = Cell.of(player);
+        afterStep(player, row, col);
+        previousPlayer = player;
     }
 
     public TableState clone() {
@@ -228,7 +253,8 @@ public class TableState implements Cloneable {
     public static void main(String[] args) {
         TableState state = new TableState();
         System.out.println(state);
-        state.newPuck(1,1,0);
+        state.newPuck(1,0,1);
+        state.movePuck(2, 0,5,0,4);
         System.out.println(state);
     }
 }
