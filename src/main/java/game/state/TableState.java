@@ -226,6 +226,10 @@ public class TableState implements Cloneable {
         previousPlayer = player;
     }
 
+    public boolean isPuckOfPlayer (int player, int row, int col) {
+        return table[row][col] == Cell.of(player);
+    }
+
     public TableState clone() {
         TableState copy = null;
         try {
