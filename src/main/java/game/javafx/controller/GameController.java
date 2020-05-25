@@ -1,9 +1,12 @@
 package game.javafx.controller;
 
+import game.data.GameData;
+import game.data.GameDataDao;
 import game.state.TableState;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.fxml.FXML;
@@ -29,6 +32,9 @@ public class GameController {
     @Inject
     private FXMLLoader fxmlLoader;
 
+    @Inject
+    private GameDataDao gameDataDao;
+
     private String player1Name;
     private String player2Name;
     private int player = 1;
@@ -37,7 +43,7 @@ public class GameController {
     private List<Image> cellImages;
 
     @FXML
-    private Label messageLabel;
+    private Label infoLabel;
 
     @FXML
     private GridPane gameGrid;
@@ -68,9 +74,16 @@ public class GameController {
         );
         gameOver.addListener((observable, oldValue, newValue) -> {
             if(newValue) {
+                gameDataDao.persist(createGameData());
                 stopWatchTimeLine.stop();
             }
         });
+        tableState = new TableState();
+        startTime = Instant.now();
+        gameOver.setValue(false);
+        createStopWatch();
+        Platform.runLater(() -> infoLabel.setText(player1Name + " vs " + player2Name));
+        displayGameState();
     }
 
     private void displayGameState() {
@@ -90,20 +103,24 @@ public class GameController {
         int col = GridPane.getColumnIndex((Node) mouseEvent.getSource());
         if(!tableState.isFinished() && tableState.isEmptyCell(row, col)) {
             tableState.newPuck(player,row,col);
-            player = (player + 1) % 2 + 1;
+            if(player == 1) {
+                player = 2;
+            } else player = 1;
             if (tableState.isFinished()) {
                 gameOver.setValue(true);
-                messageLabel.setText("Congratulations, " + (player + 1) % 2 + 1 + "!");
+                infoLabel.setText("Congratulations, " + (player + 1) % 2 + 1 + "!");
             }
-        }
-        if(!tableState.isFinished() && tableState.isPuckOfPlayer(player, row, col)) {
+        } else if(!tableState.isFinished() && tableState.isPuckOfPlayer(player, row, col)) {
             int newRow = GridPane.getRowIndex((Node) mouseEvent.getSource());
             int newCol = GridPane.getColumnIndex((Node) mouseEvent.getSource());
             tableState.movePuck(player, row, col, newRow, newCol);
-            player = (player + 1) % 2 + 1;
+            if(player == 1) {
+                player = 2;
+            } else player = 1;
             if (tableState.isFinished()) {
                 gameOver.setValue(true);
-                messageLabel.setText("Congratulations, " + (player + 1) % 2 + 1 + "!");
+                infoLabel.setText("Congratulations, " + (player + 1) % 2 + 1 + "!");
+
             }
         }
         displayGameState();
@@ -116,5 +133,14 @@ public class GameController {
         }), new KeyFrame(javafx.util.Duration.seconds(1)));
         stopWatchTimeLine.setCycleCount(Animation.INDEFINITE);
         stopWatchTimeLine.play();
+    }
+
+    private GameData createGameData () {
+        GameData data = GameData.builder()
+                .player1(player1Name)
+                .player2(player2Name)
+                .duration(java.time.Duration.between(startTime, Instant.now()))
+                .build();
+        return data;
     }
 }

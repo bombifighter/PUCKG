@@ -31,12 +31,6 @@ public class TableState implements Cloneable {
     private Cell[][] table;
 
     /**
-     * A variable to represent the current player who is taking actions.
-     */
-    @Setter(AccessLevel.NONE)
-    private int player;
-
-    /**
      * A variable to store the previous player.
      */
     @Setter(AccessLevel.NONE)
@@ -121,6 +115,9 @@ public class TableState implements Cloneable {
             return false;
         }
         if(player == previousPlayer) {
+            return false;
+        }
+        if(!isPuckOfPlayer(player, rowfrom, rowTo)) {
             return false;
         }
         return true;
@@ -258,7 +255,6 @@ public class TableState implements Cloneable {
         TableState state = new TableState();
         System.out.println(state);
         state.newPuck(1,0,1);
-        state.movePuck(2, 0,5,0,4);
         System.out.println(state);
     }
 }

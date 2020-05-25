@@ -8,10 +8,8 @@
     <version>1.0</version>
     <description>A small PvP game for a university project.</description>
     <scm>
-        <connection>https://github.com/bombifighter/swe-project.git</connection>
-        <developerConnection>https://github.com/bombifighter/swe-project.git</developerConnection>
-        <tag>HEAD</tag>
-        <url>https://github.com/bombifighter/swe-project</url>
+        <connection>scm:git:https://github.com/bombifighter/swe-project.git</connection>
+        <developerConnection>scm:git:https://github.com/bombifighter/swe-project.git</developerConnection>
     </scm>
     <developers>
         <developer>
