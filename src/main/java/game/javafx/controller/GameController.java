@@ -9,19 +9,25 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 
 import javax.inject.Inject;
+import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -37,12 +43,14 @@ public class GameController {
 
     private String[] players = new String[2];
     private int[] points = new int[2];
-    private int player = 1;
+    private int player;
     private TableState tableState;
     private Instant startTime;
     private List<Image> cellImages;
     private int prevRow = -1;
     private int prevCol = -1;
+
+    @FXML Label infoLabel;
 
     @FXML
     private Label player1Label;
@@ -64,6 +72,12 @@ public class GameController {
 
     @FXML
     private Timeline stopWatchTimeLine;
+
+    @FXML
+    private Button resetButton;
+
+    @FXML
+    private Button giveUpButton;
 
     private BooleanProperty gameOver = new SimpleBooleanProperty();
 
@@ -87,16 +101,53 @@ public class GameController {
             if(newValue) {
                 gameDataDao.persist(createGameData());
                 stopWatchTimeLine.stop();
+                player1Label.setVisible(false);
+                player2Label.setVisible(false);
+                player1PointsLabel.setVisible(false);
+                player2PointsLabel.setVisible(false);
+                infoLabel.setText("The winner is\n" + players[oppositePlayer(player)-1] + "!");
+                infoLabel.setPrefWidth(500);
             }
         });
+        resetGame();
+    }
+
+    private void resetGame () {
         tableState = new TableState();
         startTime = Instant.now();
         gameOver.setValue(false);
         createStopWatch();
+        Platform.runLater(() -> infoLabel.setText("VS"));
+        infoLabel.setPrefWidth(100);
         Platform.runLater(() -> player1Label.setText(">" + players[0] + "<"));
         Platform.runLater(() -> player2Label.setText(players[1]));
+        player1Label.setVisible(true);
+        player2Label.setVisible(true);
+        player1PointsLabel.setVisible(true);
+        player2PointsLabel.setVisible(true);
+        giveUpButton.setText("Give Up");
+        player = 1;
         displayGameState();
     }
+
+    public void handleReset (ActionEvent actionEvent) {
+        stopWatchTimeLine.stop();
+        resetGame();
+    }
+
+    public void handleGiveUp (ActionEvent actionEvent) throws IOException {
+        String buttonText = ((Button) actionEvent.getSource()).getText();
+        if (buttonText.equals("Give Up")) {
+
+        }
+        gameOver.setValue(true);
+        fxmlLoader.setLocation(getClass().getResource("/fxml/highscores.fxml"));
+        Parent root = fxmlLoader.load();
+        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root));
+        stage.show();
+    }
+
 
     private void displayGameState() {
         for (int i = 0; i < 6; i++) {
@@ -120,51 +171,18 @@ public class GameController {
         }
     }
 
-    /*public void handleClickOnCell(MouseEvent mouseEvent) {
-        int row = GridPane.getRowIndex((Node) mouseEvent.getSource());
-        int col = GridPane.getColumnIndex((Node) mouseEvent.getSource());
-        if(!tableState.isFinished() && tableState.isMoveAvailable(player, prevRow, prevCol, row, col)) {
-            System.out.println(1);
-            tableState.movePuck(1, prevRow, prevCol, row, col);
-            if(player == 1) {
-                player = 2;
-            } else player = 1;
-            if (tableState.isFinished()) {
-                gameOver.setValue(true);
-                infoLabel.setText("Congratulations, " + (player + 1) % 2 + 1 + "!");
-            }
-            prevRow = -100;
-            prevCol = -100;
-        } else if(!tableState.isFinished() && tableState.isEmptyCell(row, col)) {
-            System.out.println(2);
-            tableState.newPuck(player,row,col);
-            if(player == 1) {
-                player = 2;
-            } else player = 1;
-            if (tableState.isFinished()) {
-                gameOver.setValue(true);
-                infoLabel.setText("Congratulations, " + (player + 1) % 2 + 1 + "!");
-            }
-        } else if(!tableState.isFinished() && tableState.isPuckOfPlayer(player, row, col)) {
-            System.out.println(3);
-            prevRow = row;
-            prevCol = col;
-        }
-        displayGameState();
-    }*/
-
     public void handleClickOnCell (MouseEvent mouseEvent) {
         int row = GridPane.getRowIndex((Node) mouseEvent.getSource());
         int col = GridPane.getColumnIndex((Node) mouseEvent.getSource());
         if(prevRow < 0 && prevCol < 0) {
             if(!tableState.isFinished(player) && tableState.isEmptyCell(row, col)) {
                 tableState.newPuck(player, row, col);
-                if(player == 1) {
-                    player = 2;
-                } else player = 1;
+                player = oppositePlayer(player);
                 if (tableState.isFinished(player)) {
                     gameOver.setValue(true);
                     //infoLabel.setText("Congratulations, " + (player + 1) % 2 + 1 + "!");
+                    giveUpButton.setText("Finish");
+
                 }
             }
             if(!tableState.isFinished(player) && tableState.isPuckOfPlayer(player, row, col)) {
@@ -176,12 +194,11 @@ public class GameController {
                 tableState.movePuck(player, prevRow, prevCol, row, col);
                 prevRow = -1;
                 prevCol = -1;
-                if(player == 1) {
-                    player = 2;
-                } else player = 1;
+                player = oppositePlayer(player);
                 if (tableState.isFinished(player)) {
                     gameOver.setValue(true);
                     //infoLabel.setText("Congratulations, " + (player + 1) % 2 + 1 + "!");
+                    giveUpButton.setText("Finish");
                 }
             }
             prevRow = -1;
@@ -211,5 +228,15 @@ public class GameController {
     private void calculatePoints () {
         this.points[0] = tableState.pointsOfPlayer(1);
         this.points[1] = tableState.pointsOfPlayer(2);
+    }
+
+    private int oppositePlayer (int player) {
+        if(player == 1) {
+            return 2;
+        } else return 1;
+    }
+
+    public void giveUpAction() {
+
     }
 }

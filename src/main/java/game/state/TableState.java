@@ -99,7 +99,7 @@ public class TableState implements Cloneable {
                 if(isNewPuckAvailable(player, i, j)) {
                     return false;
                 }
-                if(isMovable(player, i, j)) {
+                if(isPuckOfPlayer(player, i, j) && isMovable(player, i, j)) {
                     return false;
                 }
             }
@@ -110,21 +110,20 @@ public class TableState implements Cloneable {
     public boolean isMovable (int player, int row, int col) {
         for(int i = 0; i < 6; i++) {
             for (int j = 0; j < 6; j++) {
-                try {
-                    if(table[i][j-2] == Cell.EMPTY || table[i][j+2] == Cell.EMPTY) {
-                        return true;
-                    }
-                    if(table[i-2][j] == Cell.EMPTY || table[i+2][j] == Cell.EMPTY) {
-                        return true;
-                    }
-                    if(table[i-2][j-2] == Cell.EMPTY || table[i-2][j+2] == Cell.EMPTY) {
-                        return true;
-                    }
-                    if(table[i+2][j-2] == Cell.EMPTY || table[i+2][j+2] == Cell.EMPTY) {
-                        return true;
-                    }
-                } catch (IndexOutOfBoundsException e) {
-
+                if(j-2 < 0 || j+2 >= 6 || i-2 < 0 || i+2 >= 6) {
+                    continue;
+                }
+                if(table[i][j-2] == Cell.EMPTY || table[i][j+2] == Cell.EMPTY) {
+                    return true;
+                }
+                if(table[i-2][j] == Cell.EMPTY || table[i+2][j] == Cell.EMPTY) {
+                    return true;
+                }
+                if(table[i-2][j-2] == Cell.EMPTY || table[i-2][j+2] == Cell.EMPTY) {
+                    return true;
+                }
+                if(table[i+2][j-2] == Cell.EMPTY || table[i+2][j+2] == Cell.EMPTY) {
+                    return true;
                 }
             }
         }
