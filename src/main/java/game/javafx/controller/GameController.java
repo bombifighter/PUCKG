@@ -35,15 +35,26 @@ public class GameController {
     @Inject
     private GameDataDao gameDataDao;
 
-    private String player1Name;
-    private String player2Name;
+    private String[] players = new String[2];
+    private int[] points = new int[2];
     private int player = 1;
     private TableState tableState;
     private Instant startTime;
     private List<Image> cellImages;
+    private int prevRow = -1;
+    private int prevCol = -1;
 
     @FXML
-    private Label infoLabel;
+    private Label player1Label;
+
+    @FXML
+    private Label player2Label;
+
+    @FXML
+    private Label player1PointsLabel;
+
+    @FXML
+    private Label player2PointsLabel;
 
     @FXML
     private GridPane gameGrid;
@@ -57,11 +68,11 @@ public class GameController {
     private BooleanProperty gameOver = new SimpleBooleanProperty();
 
     public void setPlayer1Name(String player1Name) {
-        this.player1Name = player1Name;
+        this.players[0] = player1Name;
     }
 
     public void setPlayer2Name(String player2Name) {
-        this.player2Name = player2Name;
+        this.players[1] = player2Name;
     }
 
     @FXML
@@ -82,7 +93,8 @@ public class GameController {
         startTime = Instant.now();
         gameOver.setValue(false);
         createStopWatch();
-        Platform.runLater(() -> infoLabel.setText(player1Name + " vs " + player2Name));
+        Platform.runLater(() -> player1Label.setText(">" + players[0] + "<"));
+        Platform.runLater(() -> player2Label.setText(players[1]));
         displayGameState();
     }
 
@@ -96,12 +108,35 @@ public class GameController {
                 view.setImage(cellImages.get(tableState.getTable()[i][j].getValue()));
             }
         }
+        calculatePoints();
+        player1PointsLabel.setText(Integer.toString(points[0]));
+        player2PointsLabel.setText(Integer.toString(points[1]));
+        if(player == 1) {
+            player1Label.setText(">" + players[0] + "<");
+            player2Label.setText(players[1]);
+        } else {
+            player1Label.setText(players[0]);
+            player2Label.setText(">" + players[1] + "<");
+        }
     }
 
-    public void handleClickOnCell(MouseEvent mouseEvent) {
+    /*public void handleClickOnCell(MouseEvent mouseEvent) {
         int row = GridPane.getRowIndex((Node) mouseEvent.getSource());
         int col = GridPane.getColumnIndex((Node) mouseEvent.getSource());
-        if(!tableState.isFinished() && tableState.isEmptyCell(row, col)) {
+        if(!tableState.isFinished() && tableState.isMoveAvailable(player, prevRow, prevCol, row, col)) {
+            System.out.println(1);
+            tableState.movePuck(1, prevRow, prevCol, row, col);
+            if(player == 1) {
+                player = 2;
+            } else player = 1;
+            if (tableState.isFinished()) {
+                gameOver.setValue(true);
+                infoLabel.setText("Congratulations, " + (player + 1) % 2 + 1 + "!");
+            }
+            prevRow = -100;
+            prevCol = -100;
+        } else if(!tableState.isFinished() && tableState.isEmptyCell(row, col)) {
+            System.out.println(2);
             tableState.newPuck(player,row,col);
             if(player == 1) {
                 player = 2;
@@ -111,17 +146,46 @@ public class GameController {
                 infoLabel.setText("Congratulations, " + (player + 1) % 2 + 1 + "!");
             }
         } else if(!tableState.isFinished() && tableState.isPuckOfPlayer(player, row, col)) {
-            int newRow = GridPane.getRowIndex((Node) mouseEvent.getSource());
-            int newCol = GridPane.getColumnIndex((Node) mouseEvent.getSource());
-            tableState.movePuck(player, row, col, newRow, newCol);
-            if(player == 1) {
-                player = 2;
-            } else player = 1;
-            if (tableState.isFinished()) {
-                gameOver.setValue(true);
-                infoLabel.setText("Congratulations, " + (player + 1) % 2 + 1 + "!");
+            System.out.println(3);
+            prevRow = row;
+            prevCol = col;
+        }
+        displayGameState();
+    }*/
 
+    public void handleClickOnCell (MouseEvent mouseEvent) {
+        int row = GridPane.getRowIndex((Node) mouseEvent.getSource());
+        int col = GridPane.getColumnIndex((Node) mouseEvent.getSource());
+        if(prevRow < 0 && prevCol < 0) {
+            if(!tableState.isFinished(player) && tableState.isEmptyCell(row, col)) {
+                tableState.newPuck(player, row, col);
+                if(player == 1) {
+                    player = 2;
+                } else player = 1;
+                if (tableState.isFinished(player)) {
+                    gameOver.setValue(true);
+                    //infoLabel.setText("Congratulations, " + (player + 1) % 2 + 1 + "!");
+                }
             }
+            if(!tableState.isFinished(player) && tableState.isPuckOfPlayer(player, row, col)) {
+                prevRow = row;
+                prevCol = col;
+            }
+        } else {
+            if(!tableState.isFinished(player) && tableState.isMoveAvailable(player, prevRow, prevCol, row, col)) {
+                tableState.movePuck(player, prevRow, prevCol, row, col);
+                prevRow = -1;
+                prevCol = -1;
+                if(player == 1) {
+                    player = 2;
+                } else player = 1;
+                if (tableState.isFinished(player)) {
+                    gameOver.setValue(true);
+                    //infoLabel.setText("Congratulations, " + (player + 1) % 2 + 1 + "!");
+                }
+            }
+            prevRow = -1;
+            prevCol = -1;
         }
         displayGameState();
     }
@@ -137,10 +201,15 @@ public class GameController {
 
     private GameData createGameData () {
         GameData data = GameData.builder()
-                .player1(player1Name)
-                .player2(player2Name)
+                .player1(players[0])
+                .player2(players[1])
                 .duration(java.time.Duration.between(startTime, Instant.now()))
                 .build();
         return data;
+    }
+
+    private void calculatePoints () {
+        this.points[0] = tableState.pointsOfPlayer(1);
+        this.points[1] = tableState.pointsOfPlayer(2);
     }
 }

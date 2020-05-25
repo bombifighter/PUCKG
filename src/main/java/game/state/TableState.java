@@ -93,10 +93,13 @@ public class TableState implements Cloneable {
      * Checks whether the game is finished.
      * @return {@code true} if the game is finished, {@code false} otherwise
      */
-    public boolean isFinished() {
-        for(Cell[] row : table) {
-            for(Cell cell : row) {
-                if(cell == Cell.EMPTY) {
+    public boolean isFinished(int player) {
+        for(int i = 0; i < 6; i++) {
+            for(int j = 0; j < 6; j++) {
+                if(isNewPuckAvailable(player, i, j)) {
+                    return false;
+                }
+                if(isMovable(player, i, j)) {
                     return false;
                 }
             }
@@ -104,23 +107,50 @@ public class TableState implements Cloneable {
         return true;
     }
 
+    public boolean isMovable (int player, int row, int col) {
+        for(int i = 0; i < 6; i++) {
+            for (int j = 0; j < 6; j++) {
+                try {
+                    if(table[i][j-2] == Cell.EMPTY || table[i][j+2] == Cell.EMPTY) {
+                        return true;
+                    }
+                    if(table[i-2][j] == Cell.EMPTY || table[i+2][j] == Cell.EMPTY) {
+                        return true;
+                    }
+                    if(table[i-2][j-2] == Cell.EMPTY || table[i-2][j+2] == Cell.EMPTY) {
+                        return true;
+                    }
+                    if(table[i+2][j-2] == Cell.EMPTY || table[i+2][j+2] == Cell.EMPTY) {
+                        return true;
+                    }
+                } catch (IndexOutOfBoundsException e) {
+
+                }
+            }
+        }
+        return false;
+    }
+
     public boolean isMoveAvailable (int player, int rowfrom, int colFrom, int rowTo, int colTo) {
+        if(player == previousPlayer) {
+            return false;
+        }
         if(Math.abs(rowfrom-rowTo) > 2 || Math.abs(colFrom-colTo) > 2) {
             return false;
         }
         if(!isEmptyCell(rowTo,colTo)) {
             return false;
         }
-        if(isBlackCell(rowTo,colTo)) {
-            return false;
+        if(Math.abs(rowfrom-rowTo) == 2 && Math.abs(colFrom-colTo) == 0) {
+            return true;
         }
-        if(player == previousPlayer) {
-            return false;
+        if(Math.abs(rowfrom-rowTo) == 0 && Math.abs(colFrom-colTo) == 2) {
+            return true;
         }
-        if(!isPuckOfPlayer(player, rowfrom, rowTo)) {
-            return false;
+        if(Math.abs(rowfrom-rowTo) == 2 && Math.abs(colFrom-colTo) == 2) {
+            return true;
         }
-        return true;
+        return false;
     }
 
     public boolean isEmptyCell (int row, int col) {
@@ -227,6 +257,19 @@ public class TableState implements Cloneable {
         return table[row][col] == Cell.of(player);
     }
 
+    public int pointsOfPlayer (int player) {
+        int result = 0;
+        for (int i = 0; i < 6; ++i) {
+            for (int j = 0; j < 6; ++j) {
+                if(table[i][j] == Cell.of(player))
+                {
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
+
     public TableState clone() {
         TableState copy = null;
         try {
@@ -255,6 +298,7 @@ public class TableState implements Cloneable {
         TableState state = new TableState();
         System.out.println(state);
         state.newPuck(1,0,1);
+        System.out.println(state.isMovable(1,0,0));
         System.out.println(state);
     }
 }
