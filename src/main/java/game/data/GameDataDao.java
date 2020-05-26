@@ -12,8 +12,15 @@ public class GameDataDao extends GenericJpaDao<GameData> {
     }
 
     @Transactional
-    public List<GameData> findBest(int n) {
+    public List<GameData> findBestByTime(int n) {
         return entityManager.createQuery("SELECT r FROM GameData r ORDER BY r.duration ASC, r.created DESC", GameData.class)
+                .setMaxResults(n)
+                .getResultList();
+    }
+
+    @Transactional
+    public List<GameData> findBestByPoint(int n) {
+        return entityManager.createQuery("SELECT r FROM GameData r ORDER BY r.winnerPoints DESC, r.created DESC", GameData.class)
                 .setMaxResults(n)
                 .getResultList();
     }

@@ -24,9 +24,9 @@
       </Label>
       <HBox alignment="CENTER" layoutX="25.0" layoutY="611.0" prefHeight="100.0" prefWidth="650.0" spacing="40.0">
          <children>
-            <Button fx:id="byPointButton" mnemonicParsing="false" onAction="#handleByPointButton" text="Order by Points" />
-            <Button fx:id="byTimeButton" mnemonicParsing="false" onAction="#handleByTimeButton" text="Order by Time" />
-            <Button fx:id="restartButton" mnemonicParsing="false" onAction="#handleRestartButton" prefHeight="51.0" prefWidth="122.0" text="Restart">
+            <Button mnemonicParsing="false" onAction="#handleByPointButton" text="Order by Points" />
+            <Button mnemonicParsing="false" onAction="#handleByTimeButton" text="Order by Time" />
+            <Button mnemonicParsing="false" onAction="#handleRestartButton" prefHeight="51.0" prefWidth="122.0" text="Restart">
                <HBox.margin>
                   <Insets left="80.0" />
                </HBox.margin>
