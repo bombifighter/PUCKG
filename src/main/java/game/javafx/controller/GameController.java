@@ -20,7 +20,6 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -48,6 +47,7 @@ public class GameController {
     private TableState tableState;
     private Instant startTime;
     private List<Image> cellImages;
+    private List<Image> cellImagesOnMove;
     private int prevRow = -1;
     private int prevCol = -1;
 
@@ -98,6 +98,10 @@ public class GameController {
                 new Image(getClass().getResource("/images/cell1.png").toExternalForm()),
                 new Image(getClass().getResource("/images/cell2.png").toExternalForm()),
                 new Image(getClass().getResource("/images/cell3.png").toExternalForm())
+        );
+        cellImagesOnMove = List.of(
+                new Image(getClass().getResource("/images/cell4.png").toExternalForm()),
+                new Image(getClass().getResource("/images/cell5.png").toExternalForm())
         );
         gameOver.addListener((observable, oldValue, newValue) -> {
             if(newValue) {
@@ -195,10 +199,11 @@ public class GameController {
                     log.info("Player {} has won the game", players[oppositePlayer(player) - 1]);
                     gameOver.setValue(true);
                     giveUpButton.setText("Finish");
-
                 }
             }
             if(!tableState.isFinished(player) && tableState.isPuckOfPlayer(player, row, col)) {
+                ImageView view = (ImageView) gameGrid.getChildren().get(row * 6 + col);
+                view.setImage(cellImagesOnMove.get(player - 1));
                 prevRow = row;
                 prevCol = col;
                 log.info("Puck position cell ({}, {}) is stored", row, col);
@@ -218,7 +223,9 @@ public class GameController {
             prevRow = -1;
             prevCol = -1;
         }
-        displayGameState();
+        if(prevCol < 0 && prevRow < 0) {
+            displayGameState();
+        }
     }
 
     private void createStopWatch () {

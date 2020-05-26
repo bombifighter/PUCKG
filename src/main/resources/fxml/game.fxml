@@ -127,12 +127,12 @@
    <bottom>
       <HBox alignment="CENTER" prefHeight="55.0" prefWidth="600.0" spacing="40.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="resetButton" mnemonicParsing="false" onAction="#handleReset" text="Reset">
+            <Button fx:id="resetButton" mnemonicParsing="false" onAction="#handleReset" prefWidth="120.0" text="Reset">
                <font>
                   <Font size="20.0" />
                </font>
             </Button>
-            <Button fx:id="giveUpButton" mnemonicParsing="false" onAction="#handleGiveUp" text="Give Up">
+            <Button fx:id="giveUpButton" mnemonicParsing="false" onAction="#handleGiveUp" prefHeight="39.0" prefWidth="120.0" style="-fx-background-color: darksalmon;" text="Give Up" textFill="WHITE">
                <font>
                   <Font size="20.0" />
                </font>

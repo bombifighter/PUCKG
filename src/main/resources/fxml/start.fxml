@@ -10,7 +10,7 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: lightgrey;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="game.javafx.controller.StartController">
    <children>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="200.0" layoutY="80.0" text="Puck Game">
+      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="187.0" layoutY="64.0" style="-fx-font-weight: bold;" text="Puck Game">
          <font>
             <Font name="MathJax_Main-Bold" size="36.0" />
          </font>
@@ -25,12 +25,22 @@
             </RadialGradient>
          </textFill>
       </Label>
-      <Label layoutX="180.0" layoutY="165.0" text="Player1 - Red:" />
+      <Label layoutX="147.0" layoutY="163.0" text="Player1 - Red:">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
       <TextField fx:id="player1NameTextField" layoutX="290.0" layoutY="160.0" />
-      <Button fx:id="startButton" layoutX="249.0" layoutY="287.0" mnemonicParsing="false" onAction="#startAction" prefHeight="51.0" prefWidth="105.0" text="Start game" />
       <Label fx:id="errorLabel1" layoutX="300.0" layoutY="137.0" prefHeight="16.0" prefWidth="151.0" textFill="#e30e0e" />
-      <Label layoutX="180.0" layoutY="210.0" text="Player2 - Blue:" />
+      <Label layoutX="141.0" layoutY="208.0" text="Player2 - Blue:">
+         <font>
+            <Font size="18.0" />
+         </font></Label>
       <TextField fx:id="player2NameTextField" layoutX="290.0" layoutY="205.0" />
       <Label fx:id="errorLabel2" layoutX="300.0" layoutY="242.0" prefHeight="16.0" prefWidth="151.0" textFill="#e30e0e" />
+      <Button fx:id="startButton" layoutX="210.0" layoutY="284.0" mnemonicParsing="false" onAction="#startAction" prefHeight="51.0" prefWidth="161.0" text="Start game">
+         <font>
+            <Font size="20.0" />
+         </font>
+      </Button>
    </children>
 </Pane>
