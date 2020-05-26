@@ -56,6 +56,11 @@ public class TableState implements Cloneable {
         initTable(a);
     }
 
+    /**
+     * Checks whether the specified table is valid.
+     * @param a the table to be checked
+     * @return {@code true} if the specified table is valid, {@code false} otherwise
+     */
     private boolean isValidTable(int[][] a) {
         if(a == null || a.length != 6) {
             return false;
@@ -90,8 +95,10 @@ public class TableState implements Cloneable {
     }
 
     /**
-     * Checks whether the game is finished.
-     * @return {@code true} if the game is finished, {@code false} otherwise
+     * Checks whether the game is finished with respect to the player who is next.
+     *
+     * @param player is the player who is next
+     * @return {@code true} if the player can not take actions, {@code false} otherwise
      */
     public boolean isFinished(int player) {
         for(int i = 0; i < 6; i++) {
@@ -107,6 +114,14 @@ public class TableState implements Cloneable {
         return true;
     }
 
+    /**
+     * Checks whether is it possible to move the puck from the specified position.
+     *
+     * @param row the row of the puck to be moved
+     * @param col the column of the puck to be moved
+     * @return {@code true} if there is at least one possible position, where the puck
+     * can be moved to, {@code false} otherwise
+     */
     public boolean isMoveAvailable(int row, int col) {
         if(row-2 >= 0) {
             if(table[row-2][col] == Cell.EMPTY) {
@@ -151,6 +166,18 @@ public class TableState implements Cloneable {
         return false;
     }
 
+    /**
+     * Checks whether the specified puck is able to be moved to the specified position with
+     * the respect to the specified player.
+     *
+     * @param player the player who is willing to move the puck
+     * @param rowfrom the row of the puck to be moved
+     * @param colFrom the column of the puck to be moved
+     * @param rowTo the row of the desired position
+     * @param colTo the column of the desired position
+     * @return {@code true} if the specified puck is able to be moved to the specified
+     * position by the specified player, {@code false} otherwise
+     */
     public boolean isMovableTo(int player, int rowfrom, int colFrom, int rowTo, int colTo) {
         if(player == previousPlayer) {
             return false;
@@ -173,10 +200,24 @@ public class TableState implements Cloneable {
         return false;
     }
 
+    /**
+     * Checks whether the specified cell is an empty cell.
+     *
+     * @param row the row of the cell to be checked
+     * @param col the column of the cell to be checked
+     * @return {@code true} if the specified cell is empty, {@code false} otherwise
+     */
     public boolean isEmptyCell (int row, int col) {
         return table[row][col] == Cell.EMPTY;
     }
 
+    /**
+     * Checks whether the specified cell is black cell.
+     *
+     * @param row the row of the cell to be checked
+     * @param col the column of the cell to be checked
+     * @return {@code true} if the specified cell is black, {@code false} otherwise
+     */
     public boolean isBlackCell (int row, int col) {
         return table[row][col] == Cell.BLACK;
     }
@@ -263,6 +304,8 @@ public class TableState implements Cloneable {
      * @param player the player who takes action
      * @param row the row of the puck to be placed
      * @param col the column of the puck to be placed
+     * @throws IllegalArgumentException if a new puck is available for the specified player,
+     * in the specified position
      */
     public void newPuck (int player, int row, int col) {
         if(!isNewPuckAvailable(player, row, col)) {
@@ -273,10 +316,25 @@ public class TableState implements Cloneable {
         previousPlayer = player;
     }
 
+    /**
+     * Checks whether the puck at the specified position belongs to the player specified.
+     * @param player the player who may own the specified puck
+     * @param row the row of the puck to be checked
+     * @param col the column of the puck to be checked
+     * @return {@code true} if the specified puck belongs to the specified player,
+     * {@code false} otherwise
+     */
     public boolean isPuckOfPlayer (int player, int row, int col) {
         return table[row][col] == Cell.of(player);
     }
 
+    /**
+     * Returns the score of the specified player with respect to the actual state
+     * of {@code table}.
+     *
+     * @param player the player who's points are going to be calculated
+     * @return the actual points of the player specified
+     */
     public int pointsOfPlayer (int player) {
         int result = 0;
         for (int i = 0; i < 6; ++i) {
