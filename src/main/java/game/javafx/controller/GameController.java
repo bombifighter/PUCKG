@@ -192,7 +192,7 @@ public class GameController {
                 prevCol = col;
             }
         } else {
-            if(!tableState.isFinished(player) && tableState.isMoveAvailable(player, prevRow, prevCol, row, col)) {
+            if(!tableState.isFinished(player) && tableState.isMovableTo(player, prevRow, prevCol, row, col)) {
                 tableState.movePuck(player, prevRow, prevCol, row, col);
                 prevRow = -1;
                 prevCol = -1;

@@ -23,4 +23,12 @@ class CellTest {
         assertThrows(AssertionError.class, () -> Cell.BLACK.opposite());
         assertThrows(AssertionError.class, () -> Cell.EMPTY.opposite());
     }
+
+    @Test
+    void testGetValue() {
+        assertEquals(0,Cell.EMPTY.getValue());
+        assertEquals(1,Cell.RED.getValue());
+        assertEquals(2,Cell.BLUE.getValue());
+        assertEquals(3,Cell.BLACK.getValue());
+    }
 }

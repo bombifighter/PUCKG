@@ -99,7 +99,7 @@ public class TableState implements Cloneable {
                 if(isNewPuckAvailable(player, i, j)) {
                     return false;
                 }
-                if(isPuckOfPlayer(player, i, j) && isMovable(i, j)) {
+                if(isPuckOfPlayer(player, i, j) && isMoveAvailable(i, j)) {
                     return false;
                 }
             }
@@ -107,7 +107,7 @@ public class TableState implements Cloneable {
         return true;
     }
 
-    public boolean isMovable (int row, int col) {
+    public boolean isMoveAvailable(int row, int col) {
         if(row-2 >= 0) {
             if(table[row-2][col] == Cell.EMPTY) {
                 return true;
@@ -151,7 +151,7 @@ public class TableState implements Cloneable {
         return false;
     }
 
-    public boolean isMoveAvailable (int player, int rowfrom, int colFrom, int rowTo, int colTo) {
+    public boolean isMovableTo(int player, int rowfrom, int colFrom, int rowTo, int colTo) {
         if(player == previousPlayer) {
             return false;
         }
@@ -191,7 +191,7 @@ public class TableState implements Cloneable {
      * @throws IllegalArgumentException if the specified player is not the next player in the order
      */
     public void movePuck (int player, int rowFrom, int colFrom, int rowTo, int colTo) {
-        if(!isMoveAvailable(player,rowFrom,colFrom,rowTo,colTo)) {
+        if(!isMovableTo(player,rowFrom,colFrom,rowTo,colTo)) {
             throw new IllegalArgumentException();
         }
         table[rowFrom][colFrom] = Cell.EMPTY;
@@ -318,7 +318,7 @@ public class TableState implements Cloneable {
         TableState state = new TableState();
         System.out.println(state);
         state.newPuck(1,0,1);
-        state.isMovable(0,0);
+        state.isMoveAvailable(0,0);
         System.out.println(state);
     }
 }
