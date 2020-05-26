@@ -99,7 +99,7 @@ public class TableState implements Cloneable {
                 if(isNewPuckAvailable(player, i, j)) {
                     return false;
                 }
-                if(isPuckOfPlayer(player, i, j) && isMovable(player, i, j)) {
+                if(isPuckOfPlayer(player, i, j) && isMovable(i, j)) {
                     return false;
                 }
             }
@@ -107,24 +107,45 @@ public class TableState implements Cloneable {
         return true;
     }
 
-    public boolean isMovable (int player, int row, int col) {
-        for(int i = 0; i < 6; i++) {
-            for (int j = 0; j < 6; j++) {
-                if(j-2 < 0 || j+2 >= 6 || i-2 < 0 || i+2 >= 6) {
-                    continue;
-                }
-                if(table[i][j-2] == Cell.EMPTY || table[i][j+2] == Cell.EMPTY) {
+    public boolean isMovable (int row, int col) {
+        if(row-2 >= 0) {
+            if(table[row-2][col] == Cell.EMPTY) {
+                return true;
+            }
+            if(col-2 >= 0) {
+                if(table[row-2][col-2] == Cell.EMPTY) {
                     return true;
                 }
-                if(table[i-2][j] == Cell.EMPTY || table[i+2][j] == Cell.EMPTY) {
+            }
+            if(col+2 < 6) {
+                if(table[row-2][col+2] == Cell.EMPTY) {
                     return true;
                 }
-                if(table[i-2][j-2] == Cell.EMPTY || table[i-2][j+2] == Cell.EMPTY) {
+            }
+        }
+        if(row+2 < 6) {
+            if(table[row+2][col] == Cell.EMPTY) {
+                return true;
+            }
+            if(col-2 >= 0) {
+                if(table[row+2][col-2] == Cell.EMPTY) {
                     return true;
                 }
-                if(table[i+2][j-2] == Cell.EMPTY || table[i+2][j+2] == Cell.EMPTY) {
+            }
+            if(col+2 < 6) {
+                if(table[row+2][col+2] == Cell.EMPTY) {
                     return true;
                 }
+            }
+        }
+        if(col-2 >= 0) {
+            if(table[row][col-2] == Cell.EMPTY) {
+                return true;
+            }
+        }
+        if(col+2 < 6) {
+            if(table[row][col+2] == Cell.EMPTY) {
+                return true;
             }
         }
         return false;
@@ -297,7 +318,7 @@ public class TableState implements Cloneable {
         TableState state = new TableState();
         System.out.println(state);
         state.newPuck(1,0,1);
-        System.out.println(state.isMovable(1,0,0));
+        state.isMovable(0,0);
         System.out.println(state);
     }
 }

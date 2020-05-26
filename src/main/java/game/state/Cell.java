@@ -26,7 +26,8 @@ public enum Cell {
     }
 
     /**
-     * Returns the integer value that represents this instance.
+     * Returns
+     * the integer value that represents this instance.
      *
      * @return the integer value that represents the instance
      */
