@@ -35,8 +35,7 @@ public class StartController {
     public void startAction(ActionEvent actionEvent) throws IOException {
         if(player1NameTextField.getText().isEmpty()) {
             errorLabel1.setText("Enter Player1's name!");
-        }
-        if(player2NameTextField.getText().isEmpty()) {
+        } else if(player2NameTextField.getText().isEmpty()) {
             errorLabel2.setText("Enter Player2's name!");
         } else {
             fxmlLoader.setLocation(getClass().getResource("/fxml/game.fxml"));
@@ -46,6 +45,7 @@ public class StartController {
             Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
             stage.setScene(new Scene(root));
             stage.show();
+            log.info("The players' name are set to {} and {}, loading game scene...", player1NameTextField.getText(), player2NameTextField.getText());
         }
     }
 }

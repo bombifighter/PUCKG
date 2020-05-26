@@ -239,6 +239,7 @@ public class TableState implements Cloneable {
         table[rowTo][colTo] = Cell.of(player);
         afterStep(player, rowTo, colTo);
         previousPlayer = player;
+        log.info("Puck is moved from ({}, {}) to ({}, {})", rowFrom, colFrom, rowTo, colTo);
     }
 
     /**
@@ -300,7 +301,8 @@ public class TableState implements Cloneable {
     }
 
     /**
-     * Places a new puck by the specified player to the specified position
+     * Places a new puck by the specified player to the specified position.
+     *
      * @param player the player who takes action
      * @param row the row of the puck to be placed
      * @param col the column of the puck to be placed
@@ -314,6 +316,7 @@ public class TableState implements Cloneable {
         table[row][col] = Cell.of(player);
         afterStep(player, row, col);
         previousPlayer = player;
+        log.info("New puck is placed at ({}, {})", row, col);
     }
 
     /**
@@ -348,6 +351,11 @@ public class TableState implements Cloneable {
         return result;
     }
 
+    /**
+     * Returns the clone of {@code this} object.
+     *
+     * @return the clone of {@code this} object
+     */
     public TableState clone() {
         TableState copy = null;
         try {
@@ -361,6 +369,11 @@ public class TableState implements Cloneable {
         return copy;
     }
 
+    /**
+     * Returns the string format of {@code this.table}.
+     *
+     * @return the string foramt of {@code this.table}
+     */
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (Cell[] row : table) {

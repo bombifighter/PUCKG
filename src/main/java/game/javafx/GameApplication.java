@@ -33,6 +33,7 @@ public class GameApplication extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        log.info("Starting application...");
         context.init();
         fxmlLoader.setLocation(getClass().getResource("/fxml/start.fxml"));
         Parent root = fxmlLoader.load();

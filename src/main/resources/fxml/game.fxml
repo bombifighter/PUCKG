@@ -88,35 +88,35 @@
    <top>
       <HBox alignment="CENTER" prefHeight="128.0" prefWidth="600.0" spacing="40.0" BorderPane.alignment="CENTER">
          <children>
-            <VBox alignment="CENTER" prefHeight="100.0" prefWidth="150.0" spacing="20.0">
+            <VBox alignment="CENTER" prefHeight="128.0" prefWidth="230.0" spacing="20.0">
                <children>
-                  <Label fx:id="player1Label" alignment="CENTER" prefHeight="36.0" prefWidth="150.0" text="Label">
+                  <Label fx:id="player1Label" alignment="CENTER" prefHeight="36.0" prefWidth="257.0" text="Label">
                      <font>
-                        <Font size="30.0" />
+                        <Font size="25.0" />
                      </font>
                   </Label>
                   <Label fx:id="player1PointsLabel" text="Label">
                      <font>
-                        <Font size="25.0" />
+                        <Font size="20.0" />
                      </font>
                   </Label>
                </children>
             </VBox>
-            <Label fx:id="infoLabel" alignment="CENTER" maxHeight="130.0" maxWidth="1.7976931348623157E308" text="VS" textAlignment="CENTER">
+            <Label fx:id="infoLabel" alignment="CENTER" maxHeight="130.0" maxWidth="1.7976931348623157E308" prefHeight="128.0" prefWidth="55.0" text="VS" textAlignment="CENTER">
                <font>
                   <Font size="40.0" />
                </font>
             </Label>
-            <VBox alignment="CENTER" prefHeight="100.0" prefWidth="150.0" spacing="20.0">
+            <VBox alignment="CENTER" prefHeight="128.0" prefWidth="230.0" spacing="20.0">
                <children>
-                  <Label fx:id="player2Label" alignment="CENTER" prefHeight="36.0" prefWidth="150.0" text="Label">
+                  <Label fx:id="player2Label" alignment="CENTER" prefHeight="36.0" prefWidth="291.0" text="Label">
                      <font>
-                        <Font size="30.0" />
+                        <Font size="25.0" />
                      </font>
                   </Label>
                   <Label fx:id="player2PointsLabel" text="Label">
                      <font>
-                        <Font size="25.0" />
+                        <Font size="20.0" />
                      </font>
                   </Label>
                </children>

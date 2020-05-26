@@ -5,9 +5,21 @@ package game.state;
  */
 public enum Cell {
 
+    /**
+     * Enum constant referring to a cell that is empty.
+     */
     EMPTY,
+    /**
+     * Enum constant referring to a cell that contains a red puck.
+     */
     RED,
+    /**
+     * Enum constant referring to a cell that contains a blue puck.
+     */
     BLUE,
+    /**
+     * Enum constant referring to the black cell.
+     */
     BLACK;
 
     /**
@@ -48,6 +60,12 @@ public enum Cell {
         throw new AssertionError();
     }
 
+    /**
+     * Returns the string format the specified enum constant's ordinal number.
+     *
+     * @return the string value that represents the specified enum constant's
+     * ordinal number
+     */
     public String toString() {
         return Integer.toString(ordinal());
     }

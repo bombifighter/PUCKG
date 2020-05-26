@@ -9,27 +9,27 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="game.javafx.controller.HighScoreController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="game.javafx.controller.HighScoreController">
    <children>
-      <TableView fx:id="highScoreTable" editable="true" layoutX="25.0" layoutY="74.0" prefHeight="550.0" prefWidth="650.0">
+      <TableView fx:id="highScoreTable" editable="true" layoutX="25.0" layoutY="75.0" prefHeight="550.0" prefWidth="700.0">
         <columns>
-          <TableColumn fx:id="winner" prefWidth="150.0" text="Winner" />
+          <TableColumn fx:id="winner" prefWidth="160.0" text="Winner" />
           <TableColumn fx:id="winnerPoints" prefWidth="55.0" text="Points" />
-            <TableColumn fx:id="second" prefWidth="150.0" text="Second" />
+            <TableColumn fx:id="second" prefWidth="160.0" text="Second" />
             <TableColumn fx:id="secondPoints" prefWidth="55.0" text="Points" />
             <TableColumn fx:id="duration" prefWidth="70.0" text="Time" />
-            <TableColumn fx:id="created" prefWidth="170.0" text="Date" />
+            <TableColumn fx:id="created" prefWidth="200.0" text="Date" />
         </columns>
       </TableView>
-      <Label layoutX="272.0" layoutY="32.0" text="High Scores">
+      <Label layoutX="309.0" layoutY="33.0" text="High Scores">
          <font>
             <Font size="22.0" />
          </font>
       </Label>
-      <HBox alignment="CENTER" layoutX="25.0" layoutY="611.0" prefHeight="100.0" prefWidth="650.0" spacing="40.0">
+      <HBox alignment="CENTER" layoutX="50.0" layoutY="610.0" prefHeight="100.0" prefWidth="650.0" spacing="40.0">
          <children>
-            <Button mnemonicParsing="false" onAction="#handleByPointButton" text="Order by Points" />
-            <Button mnemonicParsing="false" onAction="#handleByTimeButton" text="Order by Time" />
+            <Button mnemonicParsing="false" onAction="#handleByPointButton" prefHeight="26.0" prefWidth="135.0" text="Order by Points" />
+            <Button mnemonicParsing="false" onAction="#handleByTimeButton" prefWidth="135.0" text="Order by Time" />
             <Button mnemonicParsing="false" onAction="#handleRestartButton" prefHeight="50.0" prefWidth="120.0" text="Restart">
                <HBox.margin>
                   <Insets left="80.0" />

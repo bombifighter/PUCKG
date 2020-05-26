@@ -6,7 +6,7 @@
     <groupId>hu.unideb.inf</groupId>
     <artifactId>swe-project</artifactId>
     <version>1.0</version>
-    <description>A small PvP game for a university project.</description>
+    <description>A small local PvP game for a university project. Place and replace pucks all over the table to claim victory.</description>
     <scm>
         <connection>scm:git:https://github.com/bombifighter/swe-project.git</connection>
         <developerConnection>scm:git:https://github.com/bombifighter/swe-project.git</developerConnection>

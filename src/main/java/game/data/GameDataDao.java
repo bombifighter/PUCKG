@@ -10,6 +10,9 @@ import java.util.List;
  */
 public class GameDataDao extends GenericJpaDao<GameData> {
 
+    /**
+     * Constructor for the DAO class.
+     */
     public GameDataDao() {
         super(GameData.class);
     }

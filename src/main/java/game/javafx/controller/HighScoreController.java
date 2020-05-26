@@ -62,8 +62,8 @@ public class HighScoreController {
 
     @FXML
     private void initialize() {
-        //log.debug("Loading high scores...");
-        List<GameData> highScoreList = gameDataDao.findBestByTime(10);
+        log.debug("Loading high scores...");
+        List<GameData> highScoreList = gameDataDao.findBestByTime(30);
 
         winner.setCellValueFactory(new PropertyValueFactory<>("winner"));
         winnerPoints.setCellValueFactory(new PropertyValueFactory<>("winnerPoints"));
@@ -111,8 +111,8 @@ public class HighScoreController {
     }
 
     public void handleRestartButton(ActionEvent actionEvent) throws IOException {
-        //log.debug("{} is pressed", ((Button) actionEvent.getSource()).getText());
-        //log.info("Loading launch scene...");
+        log.debug("{} is pressed", ((Button) actionEvent.getSource()).getText());
+        log.info("Loading launch scene...");
         fxmlLoader.setLocation(getClass().getResource("/fxml/start.fxml"));
         Parent root = fxmlLoader.load();
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -120,8 +120,10 @@ public class HighScoreController {
         stage.show();
     }
 
-    public void handleByPointButton (ActionEvent actionEvent) throws IOException {
-        List<GameData> highScoreList = gameDataDao.findBestByPoint(10);
+    public void handleByPointButton (ActionEvent actionEvent) {
+        log.debug("{} is pressed", ((Button) actionEvent.getSource()).getText());
+        log.info("Loading results ordered by winning player's score...");
+        List<GameData> highScoreList = gameDataDao.findBestByPoint(30);
 
         ObservableList<GameData> observableResult = FXCollections.observableArrayList();
         observableResult.addAll(highScoreList);
@@ -129,8 +131,10 @@ public class HighScoreController {
         highScoreTable.setItems(observableResult);
     }
 
-    public void handleByTimeButton (ActionEvent actionEvent) throws IOException {
-        List<GameData> highScoreList = gameDataDao.findBestByTime(10);
+    public void handleByTimeButton (ActionEvent actionEvent) {
+        log.debug("{} is pressed", ((Button) actionEvent.getSource()).getText());
+        log.info("Loading results ordered by game duration...");
+        List<GameData> highScoreList = gameDataDao.findBestByTime(30);
 
         ObservableList<GameData> observableResult = FXCollections.observableArrayList();
         observableResult.addAll(highScoreList);
@@ -138,7 +142,9 @@ public class HighScoreController {
         highScoreTable.setItems(observableResult);
     }
 
-    public void handleExitButton (ActionEvent actionEvent) throws IOException {
+    public void handleExitButton (ActionEvent actionEvent) {
+        log.debug("{} is pressed", ((Button) actionEvent.getSource()).getText());
+        log.info("Exiting game...");
         Stage stage = (Stage) exitButton.getScene().getWindow();
         stage.close();
     }

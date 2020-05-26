@@ -20,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.Background;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Duration;
@@ -100,6 +101,8 @@ public class GameController {
         );
         gameOver.addListener((observable, oldValue, newValue) -> {
             if(newValue) {
+                log.info("Game is over");
+                log.debug("Saving result to database...");
                 calculatePoints();
                 gameDataDao.persist(createGameData());
                 stopWatchTimeLine.stop();
@@ -121,7 +124,8 @@ public class GameController {
         createStopWatch();
         Platform.runLater(() -> infoLabel.setText("VS"));
         infoLabel.setPrefWidth(100);
-        Platform.runLater(() -> player1Label.setText(">" + players[0] + "<"));
+        Platform.runLater(() -> player1Label.setText(players[0]));
+        Platform.runLater(() -> player1Label.setStyle("-fx-background-color: darksalmon;"));
         Platform.runLater(() -> player2Label.setText(players[1]));
         player1Label.setVisible(true);
         player2Label.setVisible(true);
@@ -133,13 +137,20 @@ public class GameController {
     }
 
     public void handleReset (ActionEvent actionEvent) {
+        log.debug("{} is pressed", ((Button) actionEvent.getSource()).getText());
+        log.info("Resetting game...");
         stopWatchTimeLine.stop();
         resetGame();
     }
 
     public void handleGiveUp (ActionEvent actionEvent) throws IOException {
         String buttonText = ((Button) actionEvent.getSource()).getText();
+        log.debug("{} is pressed", buttonText);
+        if(buttonText.equals("Give Up")) {
+            log.info("The game has been given up");
+        }
         gameOver.setValue(true);
+        log.info("Loading high scores scene...");
         fxmlLoader.setLocation(getClass().getResource("/fxml/highscores.fxml"));
         Parent root = fxmlLoader.load();
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -153,7 +164,7 @@ public class GameController {
             for (int j = 0; j < 6; j++) {
                 ImageView view = (ImageView) gameGrid.getChildren().get(i * 6 + j);
                 if(view.getImage() != null) {
-                    //log.trace("Image({}, {}) = {}", i, j, view.getImage().getUrl());
+                    log.trace("Image({}, {}) = {}", i, j, view.getImage().getUrl());
                 }
                 view.setImage(cellImages.get(tableState.getTable()[i][j].getValue()));
             }
@@ -161,25 +172,28 @@ public class GameController {
         calculatePoints();
         player1PointsLabel.setText(Integer.toString(points[0]));
         player2PointsLabel.setText(Integer.toString(points[1]));
+        player1Label.setStyle("-fx-background-color: transparent;");
+        player2Label.setStyle("-fx-background-color: transparent;");
+        player1Label.setText(players[0]);
+        player2Label.setText(players[1]);
         if(player == 1) {
-            player1Label.setText(">" + players[0] + "<");
-            player2Label.setText(players[1]);
+            player1Label.setStyle("-fx-background-color: darksalmon;");
         } else {
-            player1Label.setText(players[0]);
-            player2Label.setText(">" + players[1] + "<");
+            player2Label.setStyle("-fx-background-color: dodgerblue;");
         }
     }
 
     public void handleClickOnCell (MouseEvent mouseEvent) {
         int row = GridPane.getRowIndex((Node) mouseEvent.getSource());
         int col = GridPane.getColumnIndex((Node) mouseEvent.getSource());
+        log.debug("Cell ({}, {}) is pressed", row, col);
         if(prevRow < 0 && prevCol < 0) {
             if(!tableState.isFinished(player) && tableState.isEmptyCell(row, col)) {
                 tableState.newPuck(player, row, col);
                 player = oppositePlayer(player);
                 if (tableState.isFinished(player)) {
+                    log.info("Player {} has won the game", players[oppositePlayer(player) - 1]);
                     gameOver.setValue(true);
-                    //infoLabel.setText("Congratulations, " + (player + 1) % 2 + 1 + "!");
                     giveUpButton.setText("Finish");
 
                 }
@@ -187,6 +201,7 @@ public class GameController {
             if(!tableState.isFinished(player) && tableState.isPuckOfPlayer(player, row, col)) {
                 prevRow = row;
                 prevCol = col;
+                log.info("Puck position cell ({}, {}) is stored", row, col);
             }
         } else {
             if(!tableState.isFinished(player) && tableState.isMovableTo(player, prevRow, prevCol, row, col)) {
@@ -195,8 +210,8 @@ public class GameController {
                 prevCol = -1;
                 player = oppositePlayer(player);
                 if (tableState.isFinished(player)) {
+                    log.info("Player {} has won the game", players[oppositePlayer(player) - 1]);
                     gameOver.setValue(true);
-                    //infoLabel.setText("Congratulations, " + (player + 1) % 2 + 1 + "!");
                     giveUpButton.setText("Finish");
                 }
             }
