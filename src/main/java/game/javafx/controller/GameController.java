@@ -50,7 +50,8 @@ public class GameController {
     private int prevRow = -1;
     private int prevCol = -1;
 
-    @FXML Label infoLabel;
+    @FXML
+    private Label infoLabel;
 
     @FXML
     private Label player1Label;
@@ -99,6 +100,7 @@ public class GameController {
         );
         gameOver.addListener((observable, oldValue, newValue) -> {
             if(newValue) {
+                calculatePoints();
                 gameDataDao.persist(createGameData());
                 stopWatchTimeLine.stop();
                 player1Label.setVisible(false);
@@ -218,8 +220,10 @@ public class GameController {
 
     private GameData createGameData () {
         GameData data = GameData.builder()
-                .player1(players[0])
-                .player2(players[1])
+                .winner(players[oppositePlayer(player) - 1])
+                .winnerPoints(points[oppositePlayer(player) - 1])
+                .second(players[player - 1])
+                .secondPoints(points[player - 1])
                 .duration(java.time.Duration.between(startTime, Instant.now()))
                 .build();
         return data;

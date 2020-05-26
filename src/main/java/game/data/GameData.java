@@ -21,10 +21,16 @@ public class GameData {
     private long id;
 
     @Column(nullable = false)
-    private String player1;
+    private String winner;
 
     @Column(nullable = false)
-    private String player2;
+    private int winnerPoints;
+
+    @Column(nullable = false)
+    private String second;
+
+    @Column(nullable = false)
+    private int secondPoints;
 
     @Column(nullable = false)
     private Duration duration;

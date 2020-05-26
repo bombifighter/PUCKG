@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="game.javafx.controller.HighScoreController">
+   <children>
+      <TableView fx:id="highScoreTable" editable="true" layoutX="25.0" layoutY="74.0" prefHeight="550.0" prefWidth="650.0">
+        <columns>
+          <TableColumn fx:id="winner" prefWidth="150.0" text="Winner" />
+          <TableColumn fx:id="winnerPoints" prefWidth="55.0" text="Points" />
+            <TableColumn fx:id="second" prefWidth="150.0" text="Second" />
+            <TableColumn fx:id="secondPoints" prefWidth="55.0" text="Points" />
+            <TableColumn fx:id="duration" prefWidth="70.0" text="Time" />
+            <TableColumn fx:id="created" prefWidth="170.0" text="Date" />
+        </columns>
+      </TableView>
+      <Label layoutX="272.0" layoutY="32.0" text="High Scores">
+         <font>
+            <Font size="22.0" />
+         </font>
+      </Label>
+      <HBox alignment="CENTER" layoutX="25.0" layoutY="611.0" prefHeight="100.0" prefWidth="650.0" spacing="40.0">
+         <children>
+            <Button fx:id="byPointButton" mnemonicParsing="false" onAction="#handleByPointButton" text="Order by Points" />
+            <Button fx:id="byTimeButton" mnemonicParsing="false" onAction="#handleByTimeButton" text="Order by Time" />
+            <Button fx:id="restartButton" mnemonicParsing="false" onAction="#handleRestartButton" prefHeight="51.0" prefWidth="122.0" text="Restart">
+               <HBox.margin>
+                  <Insets left="80.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+   </children>
+</Pane>
