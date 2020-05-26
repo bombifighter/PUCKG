@@ -139,9 +139,6 @@ public class GameController {
 
     public void handleGiveUp (ActionEvent actionEvent) throws IOException {
         String buttonText = ((Button) actionEvent.getSource()).getText();
-        if (buttonText.equals("Give Up")) {
-
-        }
         gameOver.setValue(true);
         fxmlLoader.setLocation(getClass().getResource("/fxml/highscores.fxml"));
         Parent root = fxmlLoader.load();
@@ -238,9 +235,5 @@ public class GameController {
         if(player == 1) {
             return 2;
         } else return 1;
-    }
-
-    public void giveUpAction() {
-
     }
 }

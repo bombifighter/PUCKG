@@ -58,6 +58,9 @@ public class HighScoreController {
     private TableColumn<GameData, ZonedDateTime> created;
 
     @FXML
+    private Button exitButton;
+
+    @FXML
     private void initialize() {
         //log.debug("Loading high scores...");
         List<GameData> highScoreList = gameDataDao.findBestByTime(10);
@@ -135,4 +138,8 @@ public class HighScoreController {
         highScoreTable.setItems(observableResult);
     }
 
+    public void handleExitButton (ActionEvent actionEvent) throws IOException {
+        Stage stage = (Stage) exitButton.getScene().getWindow();
+        stage.close();
+    }
 }
