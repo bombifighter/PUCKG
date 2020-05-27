@@ -61,7 +61,7 @@ public class TableState implements Cloneable {
      * @param a the table to be checked
      * @return {@code true} if the specified table is valid, {@code false} otherwise
      */
-    private boolean isValidTable(int[][] a) {
+    public boolean isValidTable(int[][] a) {
         if(a == null || a.length != 6) {
             return false;
         }
