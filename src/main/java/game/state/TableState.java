@@ -95,23 +95,25 @@ public class TableState implements Cloneable {
     }
 
     /**
-     * Checks whether the game is finished with respect to the player who is next.
+     * Checks whether the specified cell is an empty cell.
      *
-     * @param player is the player who is next
-     * @return {@code true} if the player can not take actions, {@code false} otherwise
+     * @param row the row of the cell to be checked
+     * @param col the column of the cell to be checked
+     * @return {@code true} if the specified cell is empty, {@code false} otherwise
      */
-    public boolean isFinished(int player) {
-        for(int i = 0; i < 6; i++) {
-            for(int j = 0; j < 6; j++) {
-                if(isNewPuckAvailable(player, i, j)) {
-                    return false;
-                }
-                if(isPuckOfPlayer(player, i, j) && isMoveAvailable(i, j)) {
-                    return false;
-                }
-            }
-        }
-        return true;
+    public boolean isEmptyCell (int row, int col) {
+        return table[row][col] == Cell.EMPTY;
+    }
+
+    /**
+     * Checks whether the specified cell is black cell.
+     *
+     * @param row the row of the cell to be checked
+     * @param col the column of the cell to be checked
+     * @return {@code true} if the specified cell is black, {@code false} otherwise
+     */
+    public boolean isBlackCell (int row, int col) {
+        return table[row][col] == Cell.BLACK;
     }
 
     /**
@@ -201,44 +203,37 @@ public class TableState implements Cloneable {
     }
 
     /**
-     * Returns the number of empty cells in the table. Used in
-     * calculating points.
-     *
-     * @return the number of empty cells in the table
+     * Checks whether the puck at the specified position belongs to the player specified.
+     * @param player the player who may own the specified puck
+     * @param row the row of the puck to be checked
+     * @param col the column of the puck to be checked
+     * @return {@code true} if the specified puck belongs to the specified player,
+     * {@code false} otherwise
      */
-    public int numberOfEmptyCells () {
-        int result = 0;
+    public boolean isPuckOfPlayer (int player, int row, int col) {
+        return table[row][col] == Cell.of(player);
+    }
+
+    /**
+     * Checks whether the game is finished with respect to the player who is next.
+     *
+     * @param player is the player who is next
+     * @return {@code true} if the player can not take actions, {@code false} otherwise
+     */
+    public boolean isFinished(int player) {
         for(int i = 0; i < 6; i++) {
             for(int j = 0; j < 6; j++) {
-                if(isEmptyCell(i, j)) {
-                    result++;
+                if(isNewPuckAvailable(player, i, j)) {
+                    return false;
+                }
+                if(isPuckOfPlayer(player, i, j) && isMoveAvailable(i, j)) {
+                    return false;
                 }
             }
         }
-        return result;
+        return true;
     }
 
-    /**
-     * Checks whether the specified cell is an empty cell.
-     *
-     * @param row the row of the cell to be checked
-     * @param col the column of the cell to be checked
-     * @return {@code true} if the specified cell is empty, {@code false} otherwise
-     */
-    public boolean isEmptyCell (int row, int col) {
-        return table[row][col] == Cell.EMPTY;
-    }
-
-    /**
-     * Checks whether the specified cell is black cell.
-     *
-     * @param row the row of the cell to be checked
-     * @param col the column of the cell to be checked
-     * @return {@code true} if the specified cell is black, {@code false} otherwise
-     */
-    public boolean isBlackCell (int row, int col) {
-        return table[row][col] == Cell.BLACK;
-    }
     /**
      * Moves a puck from a given position to another position by the specific player.
      *
@@ -258,29 +253,6 @@ public class TableState implements Cloneable {
         afterStep(player, rowTo, colTo);
         previousPlayer = player;
         log.info("Puck is moved from ({}, {}) to ({}, {})", rowFrom, colFrom, rowTo, colTo);
-    }
-
-    /**
-     * After a step, changes all puck belonging to the other player in the eight adjacent cells.
-     *
-     * @param player the player who took the previous step
-     * @param row the row of the new or replaced puck
-     * @param col the column of the new or replaced puck
-     */
-    public void afterStep (int player, int row, int col) {
-        for(int i = row-1; i<= row+1; i++) {
-            if(i < 0 || i >= table.length) {
-                continue;
-            }
-            for(int j = col-1; j<= col+1; j++) {
-                if(j < 0 || j >= table.length) {
-                    continue;
-                }
-                if(table[i][j] == Cell.of(player).opposite()) {
-                    table[i][j] = Cell.of(player);
-                }
-            }
-        }
     }
 
     /**
@@ -338,15 +310,26 @@ public class TableState implements Cloneable {
     }
 
     /**
-     * Checks whether the puck at the specified position belongs to the player specified.
-     * @param player the player who may own the specified puck
-     * @param row the row of the puck to be checked
-     * @param col the column of the puck to be checked
-     * @return {@code true} if the specified puck belongs to the specified player,
-     * {@code false} otherwise
+     * After a step, changes all puck belonging to the other player in the eight adjacent cells.
+     *
+     * @param player the player who took the previous step
+     * @param row the row of the new or replaced puck
+     * @param col the column of the new or replaced puck
      */
-    public boolean isPuckOfPlayer (int player, int row, int col) {
-        return table[row][col] == Cell.of(player);
+    public void afterStep (int player, int row, int col) {
+        for(int i = row-1; i<= row+1; i++) {
+            if(i < 0 || i >= table.length) {
+                continue;
+            }
+            for(int j = col-1; j<= col+1; j++) {
+                if(j < 0 || j >= table.length) {
+                    continue;
+                }
+                if(table[i][j] == Cell.of(player).opposite()) {
+                    table[i][j] = Cell.of(player);
+                }
+            }
+        }
     }
 
     /**
@@ -362,6 +345,24 @@ public class TableState implements Cloneable {
             for (int j = 0; j < 6; ++j) {
                 if(table[i][j] == Cell.of(player))
                 {
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
+     * Returns the number of empty cells in the table. Used in
+     * calculating points.
+     *
+     * @return the number of empty cells in the table
+     */
+    public int numberOfEmptyCells () {
+        int result = 0;
+        for(int i = 0; i < 6; i++) {
+            for(int j = 0; j < 6; j++) {
+                if(isEmptyCell(i, j)) {
                     result++;
                 }
             }
