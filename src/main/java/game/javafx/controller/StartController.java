@@ -66,9 +66,13 @@ public class StartController {
         if(!ruleArea.visibleProperty().getValue()) {
             ruleArea.setVisible(true);
             rulesButton.setText("Hide rules");
+            log.debug("{} is pressed", ((Button) actionEvent.getSource()).getText());
+            log.info("Showing rules...");
         } else {
             ruleArea.setVisible(false);
             rulesButton.setText("Show rules");
+            log.debug("{} is pressed", ((Button) actionEvent.getSource()).getText());
+            log.info("Hiding rules...");
         }
     }
 }
