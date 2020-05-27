@@ -27,6 +27,9 @@
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
+# Ignore create.sql
+create.sql
+
 ### Maven ###
 target/
 pom.xml.tag
@@ -39,5 +42,6 @@ buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 .flattened-pom.xml
+.idea/
 
 # End of https://www.gitignore.io/api/java,maven
