@@ -19,3 +19,7 @@ Players make actions alternately. Each player can make one action of these per r
 After each action made, all pucks of the other player in the 8 adjacent cells to the newly placed or replaced turns into the color of the player who made actions.
 
 The game ends if the next player cannot make actions. The winner is the player with more pucks on the table. In the end the number of empty cells are added to the points of the player who made the last action.
+
+# Requirements
+
+Building the project requires JDK 11 or later and [Apache Maven](https://maven.apache.org/)
