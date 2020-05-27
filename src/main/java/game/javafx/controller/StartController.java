@@ -6,7 +6,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
@@ -32,6 +34,17 @@ public class StartController {
     @FXML
     private Label errorLabel2;
 
+    @FXML
+    private TextArea ruleArea;
+
+    @FXML
+    private Button rulesButton;
+
+    @FXML
+    public void initialize() {
+        ruleArea.setVisible(false);
+    }
+
     public void startAction(ActionEvent actionEvent) throws IOException {
         if(player1NameTextField.getText().isEmpty()) {
             errorLabel1.setText("Enter Player1's name!");
@@ -46,6 +59,16 @@ public class StartController {
             stage.setScene(new Scene(root));
             stage.show();
             log.info("The players' name are set to {} and {}, loading game scene...", player1NameTextField.getText(), player2NameTextField.getText());
+        }
+    }
+
+    public void handleRules(ActionEvent actionEvent) {
+        if(!ruleArea.visibleProperty().getValue()) {
+            ruleArea.setVisible(true);
+            rulesButton.setText("Hide rules");
+        } else {
+            ruleArea.setVisible(false);
+            rulesButton.setText("Show rules");
         }
     }
 }
