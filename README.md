@@ -1,5 +1,5 @@
-Puck Game
-=========
+PUCKG - Puck Game
+=================
 
 A small logical PvP game with pucks, made as a university course project.
 
