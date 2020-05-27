@@ -3,7 +3,7 @@ PUCKG - Puck Game
 
 A small logical PvP game with pucks, made as a university course project.
 
-# How to play this game?
+## How to play this game?
 
 Given a 6x6 game table. Each of the two players have 2 pucks at the beginning of the game. There are 2 types of cell in the game:
 
@@ -20,6 +20,6 @@ After each action made, all pucks of the other player in the 8 adjacent cells to
 
 The game ends if the next player cannot make actions. The winner is the player with more pucks on the table. In the end the number of empty cells are added to the points of the player who made the last action.
 
-# Requirements
+## Requirements
 
 Building the project requires JDK 11 or later and [Apache Maven](https://maven.apache.org/)
