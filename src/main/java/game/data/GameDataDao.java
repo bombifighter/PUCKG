@@ -42,7 +42,7 @@ public class GameDataDao extends GenericJpaDao<GameData> {
      */
     @Transactional
     public List<GameData> findBestByPoint(int n) {
-        return entityManager.createQuery("SELECT r FROM GameData r ORDER BY r.winnerPoints DESC, r.created DESC", GameData.class)
+        return entityManager.createQuery("SELECT r FROM GameData r ORDER BY r.winnerPoints DESC, r.duration ASC", GameData.class)
                 .setMaxResults(n)
                 .getResultList();
     }

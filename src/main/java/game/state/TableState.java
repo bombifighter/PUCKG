@@ -201,6 +201,24 @@ public class TableState implements Cloneable {
     }
 
     /**
+     * Returns the number of empty cells in the table. Used in
+     * calculating points.
+     *
+     * @return the number of empty cells in the table
+     */
+    public int numberOfEmptyCells () {
+        int result = 0;
+        for(int i = 0; i < 6; i++) {
+            for(int j = 0; j < 6; j++) {
+                if(isEmptyCell(i, j)) {
+                    result++;
+                }
+            }
+        }
+        return result;
+    }
+
+    /**
      * Checks whether the specified cell is an empty cell.
      *
      * @param row the row of the cell to be checked

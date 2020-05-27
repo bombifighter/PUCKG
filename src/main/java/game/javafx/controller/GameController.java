@@ -50,6 +50,7 @@ public class GameController {
     private List<Image> cellImagesOnMove;
     private int prevRow = -1;
     private int prevCol = -1;
+    private int playerGaveUp = -1;
 
     @FXML
     private Label infoLabel;
@@ -74,9 +75,6 @@ public class GameController {
 
     @FXML
     private Timeline stopWatchTimeLine;
-
-    @FXML
-    private Button resetButton;
 
     @FXML
     private Button giveUpButton;
@@ -108,13 +106,17 @@ public class GameController {
                 log.info("Game is over");
                 log.debug("Saving result to database...");
                 calculatePoints();
+                points[oppositePlayer(player) - 1] += tableState.numberOfEmptyCells();
                 gameDataDao.persist(createGameData());
                 stopWatchTimeLine.stop();
                 player1Label.setVisible(false);
                 player2Label.setVisible(false);
                 player1PointsLabel.setVisible(false);
                 player2PointsLabel.setVisible(false);
-                infoLabel.setText("The winner is\n" + players[oppositePlayer(player)-1] + "!");
+                infoLabel.setText("The winner is\n" + players[winner(playerGaveUp)] + "!");
+                if(winner(playerGaveUp) == 0) {
+                    infoLabel.setStyle("-fx-text-fill: red");
+                } else infoLabel.setStyle("-fx-text-fill: blue");
                 infoLabel.setPrefWidth(500);
             }
         });
@@ -153,6 +155,7 @@ public class GameController {
         if(buttonText.equals("Give Up")) {
             log.info("The game has been given up");
         }
+        playerGaveUp = player;
         gameOver.setValue(true);
         log.info("Loading high scores scene...");
         fxmlLoader.setLocation(getClass().getResource("/fxml/highscores.fxml"));
@@ -239,10 +242,10 @@ public class GameController {
 
     private GameData createGameData () {
         GameData data = GameData.builder()
-                .winner(players[oppositePlayer(player) - 1])
-                .winnerPoints(points[oppositePlayer(player) - 1])
-                .second(players[player - 1])
-                .secondPoints(points[player - 1])
+                .winner(players[winner(playerGaveUp)])
+                .winnerPoints(points[winner(playerGaveUp)])
+                .second(players[oppositePlayer(winner(playerGaveUp)+ 1 )- 1])
+                .secondPoints(points[oppositePlayer(winner(playerGaveUp)+ 1 )- 1])
                 .duration(java.time.Duration.between(startTime, Instant.now()))
                 .build();
         return data;
@@ -251,6 +254,19 @@ public class GameController {
     private void calculatePoints () {
         this.points[0] = tableState.pointsOfPlayer(1);
         this.points[1] = tableState.pointsOfPlayer(2);
+    }
+
+    private int winner (int playerGaveUp) {
+        if(playerGaveUp > 0) {
+            return oppositePlayer(playerGaveUp) - 1;
+        }
+        if(points[0] > points[1]) {
+            return 0;
+        }
+        if (points[1] > points[0]) {
+            return 1;
+        }
+        return oppositePlayer(player) - 1;
     }
 
     private int oppositePlayer (int player) {
